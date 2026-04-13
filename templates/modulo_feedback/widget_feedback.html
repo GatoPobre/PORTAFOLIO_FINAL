@@ -1,0 +1,36 @@
+<!-- mf = modulo_feedback prefix -->
+
+<button id="mf-btn-flotante" class="btn fw-bold cyber-btn cyber-btn-outline-blue position-fixed d-flex flex-column align-items-center justify-content-center shadow mf-btn-lateral" aria-label="Enviar Feedback" style="transform: translateY(-50%);">
+    <i class="bi bi-chat-square-text-fill mb-2 mb-md-3 fs-5 fs-md-4 mf-icon"></i> 
+    <span style="writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 3px;">[ SUGERENCIAS ]</span>
+</button>
+
+<div id="mf-modal" class="position-fixed top-0 start-0 w-100 h-100 d-none d-flex" style="background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center;">
+    <div class="card rounded-0 border tarjeta-cristal bg-dark-1 border-neon-green p-4 position-relative scanlines-container" style="width: 90%; max-width: 500px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.15); font-family: 'Courier New', Courier, monospace;">
+        <button id="mf-cerrar" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" aria-label="Cerrar modal"></button>
+        
+        <h4 class="fw-bold text-neon-green mb-3 letter-spacing-1">>_ ENVIAR_REPORTE.exe<span class="blink-cursor">_</span></h4>
+        
+        <form id="mf-formulario" class="cyber-form">
+            <div class="mb-3">
+                <textarea id="mf-comentario" class="form-control bg-dark-2 text-neon-green border-neon-green rounded-0" required placeholder=">_ Describe tu anomalía o sugerencia aquí con detalle..." rows="5" aria-label="Describe tu anomalía o sugerencia"></textarea>
+            </div>
+            
+            <div class="mb-4 text-legible-secondary small">
+                <label class="d-flex align-items-start gap-2" style="cursor: pointer;">
+                    <input type="checkbox" id="mf-consentimiento" required class="mt-1" style="width: auto; accent-color: #00ff41;">
+                    <span>Entiendo que se adjuntará una captura de mi pantalla actual y datos de mi navegador. He leído la <a href="/politicas-de-privacidad" target="_blank" class="text-cyber-blue fw-bold text-decoration-none">[ POLÍTICA DE PRIVACIDAD ]</a>.</span>
+                </label>
+            </div>
+
+            <button type="submit" id="mf-btn-enviar" class="btn rounded-0 fw-bold w-100 py-2 cyber-btn cyber-btn-green letter-spacing-1">
+                [ TRANSMITIR REPORTE ]
+            </button>
+            <div id="mf-loading" class="mf-loading d-none mt-3 text-center text-cyber-blue fw-bold">
+                >_ PROCESANDO CAPTURA Y ENVIANDO PAQUETES<span class="blink-cursor">_</span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>

@@ -1,0 +1,124 @@
+{% load cyber_filtros %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura #{{ pedido.id }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #333;
+            font-size: 12px;
+        }
+        .header h1 {
+            color: #00ff41;
+            margin: 0;
+            font-size: 28px;
+        }
+        .header p {
+            margin: 0;
+            color: #555;
+        }
+        .details {
+            margin: 40px 0;
+            width: 100%;
+        }
+        .client-info {
+            width: 50%;
+            float: left;
+        }
+        .invoice-info {
+            width: 50%;
+            float: right;
+            text-align: right;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        .items-table th {
+            background-color: #eee;
+            font-weight: bold;
+        }
+        .text-right { text-align: right; }
+        .total-section {
+            margin-top: 20px;
+            float: right;
+            width: 40%;
+        }
+        .total-section table {
+            width: 100%;
+        }
+        .total-section td { padding: 5px; }
+        .footer {
+            position: fixed;
+            bottom: -1cm;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GatoPobreTECK</h1>
+        <p>Hardware y Neuro-procesadores</p>
+    </div>
+    <div class="details">
+        <div class="client-info">
+            <strong>Facturar a:</strong><br>
+            {{ pedido.nombre_cliente }}<br>
+            {{ pedido.email }}<br>
+            {{ pedido.direccion }}
+        </div>
+        <div class="invoice-info">
+            <strong>Factura #:</strong> {{ pedido.id }}<br>
+            <strong>Fecha:</strong> {{ pedido.fecha_pedido|date:"d/m/Y" }}<br>
+            <strong>Estado:</strong> {{ pedido.get_estado_display }}
+        </div>
+    </div>
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th class="text-right">Cantidad</th>
+                <th class="text-right">Precio Unitario</th>
+                <th class="text-right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in pedido.items.all %}
+            <tr>
+                <td>{{ item.nombre_producto }}</td>
+                <td class="text-right">{{ item.cantidad }}</td>
+                <td class="text-right">${{ item.precio_unitario|puntos }}</td>
+                <td class="text-right">${% widthratio item.precio_unitario 1 item.cantidad as subtotal %}{{ subtotal|puntos }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="total-section">
+        <table>
+            <tr>
+                <td><strong>Total Pagado:</strong></td>
+                <td class="text-right"><strong>${{ pedido.total_pagado|puntos }}</strong></td>
+            </tr>
+        </table>
+    </div>
+    <div class="footer">
+        <p>Gracias por su compra en GatoPobreTECK</p>
+    </div>
+</body>
+</html>

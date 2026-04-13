@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load cyber_filtros %}
+
+{% block title %}{{ producto.nombre }} | GatoPobre{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5 scanlines-container" style="font-family: 'Courier New', Courier, monospace;">
+    
+    <!-- Migas de pan visuales (UX) -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0" style="font-size: 0.85rem; letter-spacing: 1px;">
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:inicio' %}" class="text-decoration-none text-cyber-blue hover-neon-green">>_ INICIO.exe</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'tienda:tienda' %}" class="text-decoration-none text-cyber-blue hover-neon-green">TIENDA.bat</a></li>
+                    <li class="breadcrumb-item active fw-bold text-neon-green" aria-current="page" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">{{ producto.nombre }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+            <h2 class="fw-bold m-0" style="color: #00f3ff; text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);">
+                >_ ANALISIS_DE_MODULO.exe<span class="blink-cursor">_</span>
+            </h2>
+            <button onclick="history.back()" class="btn cyber-btn cyber-btn-outline-blue px-4">
+                <i class="bi bi-arrow-return-left me-2"></i>[ RETORNAR ]
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card rounded-0 border h-100 tarjeta-cristal bg-dark-1" style="border-color: #00f3ff !important; box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);">
+                <div class="card-header border-bottom-0 pt-3 pb-0" style="background-color: transparent;">
+                    <span class="fw-bold" style="color: #00f3ff; letter-spacing: 1px;">// VISTA_PREVIA.png</span>
+                </div>
+                
+                <div class="card-body text-center d-flex flex-column justify-content-center p-3 p-md-4">
+                    {% if producto.imagen %}
+                        <img id="product-img-source" src="{{ producto.imagen.url }}" class="img-fluid rounded-0 border border-neon-blue" style="box-shadow: 0 0 10px rgba(0,243,255,0.2);" alt="{{ producto.nombre }}">
+                    {% else %}
+                        <div id="product-img-source" class="d-flex align-items-center justify-content-center border w-100 bg-dark-2" style="min-height: 400px; border-color: #ff003c !important;">
+                            <h4 class="fw-bold m-0" style="color: #ff003c; text-shadow: 0 0 5px rgba(255,0,60,0.5);">>_ ARCHIVO_NO_ENCONTRADO</h4>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card rounded-0 border h-100 tarjeta-cristal bg-dark-1" style="border-color: #00ff41 !important; box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);">
+                <div class="card-header border-bottom-0 pt-3 pb-0 " style="background-color: transparent;">
+                    <span class="fw-bold" style="color: #00ff41; letter-spacing: 1px;">// ESPECIFICACIONES_TECNICAS.txt</span>
+                </div>
+
+                <div class="card-body p-3 p-md-5">
+                    <h1 class="fw-bold text-uppercase mb-2" style="color: #00ff41;">{{ producto.nombre }}</h1>
+                    <h2 class="fw-bold mb-4" style="color: #00f3ff; text-shadow: 0 0 8px rgba(0,243,255,0.5);">${{ producto.precio|puntos }}</h2>
+                    
+                    <p class="mb-4 text-legible-muted"> 
+                        > ESTADO_DEL_INVENTARIO: 
+                        <span class="badge rounded-0 fs-6 ms-2" style="{% if producto.stock > 0 %}background-color: #00ff41; color: #050505;{% else %}background-color: #ff003c; color: #050505;{% endif %} letter-spacing: 1px;">
+                            {% if producto.stock > 0 %}ONLINE ({{ producto.stock|puntos }} UNIDADES){% else %}OFFLINE (AGOTADO){% endif %}
+                        </span>
+                    </p>
+
+                    <div class="mb-5 p-3 border bg-dark-2" style="border-color: #1a4d4d !important; max-height: 250px; overflow-y: auto;">
+                        <h5 class="fw-bold mb-3 text-neon-green">>_ DESCIFRANDO_DATOS...</h5>
+                        <p class="mt-3 m-0 text-cyber-blue" style="line-height: 1.6;">{{ producto.caracteristicas|linebreaksbr }}</p>
+                    </div>
+
+
+                    <div class="border p-3 p-md-4 mt-auto" style="background-color: rgba(0, 255, 65, 0.05); border-color: #00ff41 !important;">
+                        <form action="{% url 'tienda:agregar_carro' producto.id %}" method="POST" class="cyber-form cyber-form-cart" data-checkout-url="{% url 'tienda:checkout' %}">
+                            {% csrf_token %}
+                            <div class="row align-items-center g-3 mb-4">
+                                <div class="col-auto">
+                                    <label for="cantidad" class="col-form-label fw-bold" style="color: #00ff41;">// CANTIDAD_A_EXTRAER:</label>
+                                </div> 
+                                <div class="col-auto"> 
+                                    <input type="number" id="cantidad" name="cantidad" class="form-control rounded-0 text-center fw-bold" value="1" min="1" max="{{ producto.stock }}" style="width: 80px; border: 1px solid #00f3ff;">
+                                </div>
+                            </div>
+                            
+                            <div class="mt-2">
+                                <button type="submit" class="btn rounded-0 btn-lg w-100 fw-bold custom-cyber-submit" 
+                                        {% if producto.stock <= 0 %}disabled{% endif %}
+                                        style="background-color: transparent; border: 2px solid {% if producto.stock > 0 %}#00ff41{% else %}#555{% endif %}; color: {% if producto.stock > 0 %}#00ff41{% else %}#777{% endif %}; transition: 0.3s; letter-spacing: 2px;">
+                                    {% if producto.stock > 0 %}
+                                        [ INYECTAR AL CARRITO ]
+                                    {% else %}
+                                        [ ERROR: SIN EXISTENCIAS ]
+                                    {% endif %}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<!-- Datos Estructurados (JSON-LD) para SEO (Rich Snippets en Google) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ producto.nombre|escapejs }}",
+  {% if producto.imagen %}
+  "image": [
+    "{{ request.scheme }}://{{ request.get_host }}{{ producto.imagen.url }}"
+  ],
+  {% endif %}
+  "description": "{{ producto.descripcion_corta|default:producto.nombre|escapejs }}",
+  "sku": "MOD-{{ producto.id }}",
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.build_absolute_uri }}",
+    "priceCurrency": "CLP",
+    "price": "{{ producto.precio }}",
+    "availability": "{% if producto.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+  }
+}
+</script>
+
+<!-- Datos Estructurados (JSON-LD) para Migas de Pan (Breadcrumbs) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Inicio",
+    "item": "{{ request.scheme }}://{{ request.get_host }}/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Tienda",
+    "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'tienda:tienda' %}"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "{{ producto.nombre|escapejs }}",
+    "item": "{{ request.build_absolute_uri }}"
+  }]
+}
+</script>
+{% endblock extra_js %}

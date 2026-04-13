@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load cyber_filtros %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5 scanlines-container" style="font-family: 'Courier New', Courier, monospace;">
+    <!-- Migas de pan -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0" style="font-size: 0.85rem; letter-spacing: 1px;">
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:inicio' %}" class="text-decoration-none text-cyber-blue hover-neon-green">>_ INICIO.exe</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:dashboard' %}" class="text-decoration-none text-cyber-blue hover-neon-green">TERMINAL_PERSONAL.sys</a></li>
+                    <li class="breadcrumb-item active fw-bold text-neon-green" aria-current="page" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">{{ titulo|upper }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mb-4 text-center text-md-start">
+        <h2 class="fw-bold m-0 text-neon-green text-shadow-green">
+            >_ {{ titulo }}<span class="blink-cursor">_</span>
+        </h2>
+    </div>
+
+    <!-- Pestañas de Estado -->
+    <ul class="nav nav-tabs border-neon-blue mb-4" role="tablist">
+        {% for estado_val, estado_nom in estados_posibles %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link cyber-nav-link text-uppercase {% if estado_actual == estado_val %}active-neon{% endif %}" href="?estado={{ estado_val }}&q={{ query }}">
+                    {{ estado_nom }} <span class="badge bg-secondary ms-1">{{ conteo_estados|get_item:estado_val|default:0 }}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Buscador -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-12">
+            <form method="GET" class="cyber-form">
+                <input type="hidden" name="estado" value="{{ estado_actual }}">
+                <div class="input-group" style="box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);">
+                    <span class="input-group-text bg-dark-2 border-neon-blue text-cyber-blue rounded-0"><i class="bi bi-search"></i></span>
+                    <input type="text" name="q" value="{{ query|default:'' }}" class="form-control border-neon-blue text-cyber-blue rounded-0" placeholder=">_ Buscar por ID, nombre o email del cliente..." aria-label="Buscar pedido">
+                    <button type="submit" class="btn cyber-btn cyber-btn-outline-blue rounded-0 fw-bold px-4">[ BUSCAR ]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card rounded-0 border tarjeta-cristal bg-dark-1 border-neon-green">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0 cyber-table">
+                    <thead class="border-neon-green">
+                        <tr>
+                            <th class="py-3 ps-4 text-neon-green">ID_PEDIDO</th>
+                            <th class="py-3 text-neon-green">CLIENTE</th>
+                            <th class="py-3 text-center text-neon-green">FECHA</th>
+                            <th class="py-3 text-center text-neon-green">TOTAL</th>
+                            <th class="py-3 text-center text-neon-green">ESTADO</th>
+                            <th class="py-3 text-center text-neon-green" style="min-width: 220px;">CAMBIAR ESTADO</th>
+                            <th class="py-3 text-center text-neon-green">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in pedidos %}
+                        <tr>
+                            <td data-label="// ID_PEDIDO" class="fw-bold ps-4 text-neon-blue">#{{ pedido.id }}</td>
+                            <td data-label="// CLIENTE" class="fw-bold full-width-mobile text-cyber-blue">{{ pedido.nombre_cliente }}</td>
+                            <td data-label="// FECHA" class="text-center text-secondary">{{ pedido.fecha_pedido|date:"Y-m-d H:i" }}</td>
+                            <td data-label="// TOTAL" class="text-center text-neon-green fw-bold">${{ pedido.total_pagado|puntos }}</td>
+                            <td data-label="// ESTADO" class="text-center">
+                                {% with estado_color=pedido.estado|estado_color %}
+                                <span class="badge rounded-0 border p-2 letter-spacing-1" style="border-color: {{ estado_color }} !important; color: {{ estado_color }}; background-color: rgba(0,0,0,0.3);">
+                                    {{ pedido.get_estado_display|upper }}
+                                </span>
+                                {% endwith %}
+                            </td>
+                            <td data-label="// CAMBIAR ESTADO" class="text-center full-width-mobile">
+                                {% if pedido.estado != 'ANULADO' or request.user.is_superuser %}
+                                <form action="{% url 'tienda:cambiar_estado_pedido' pedido.id %}" method="post" class="d-inline-block w-100 form-cambiar-estado">
+                                    {% csrf_token %}
+                                    <div class="input-group input-group-sm">
+                                        <select name="estado" class="form-select rounded-0 bg-dark-2 border-secondary text-light" required>
+                                            <option value="" selected disabled>Seleccionar...</option>
+                                            {% if pedido.estado == 'INGRESADO' %}
+                                                <option value="PAGADO">Pagado</option>
+                                            {% elif pedido.estado == 'PAGADO' %}
+                                                <option value="ENVIADO">Enviado</option>
+                                                <option value="ANULADO">Anular</option>
+                                            {% elif pedido.estado == 'ENVIADO' %}
+                                                <option value="ANULADO">Anular</option>
+                                        {% elif pedido.estado == 'ANULADO' and request.user.is_superuser %}
+                                            <option value="INGRESADO">Restaurar a Ingresado</option>
+                                            <option value="PAGADO">Restaurar a Pagado</option>
+                                            {% endif %}
+                                        </select>
+                                        <button type="submit" class="btn cyber-btn cyber-btn-outline-green">OK</button>
+                                    </div>
+                                </form>
+                                {% else %}
+                                <span class="text-muted small">--</span>
+                                {% endif %}
+                            </td>
+                            <td data-label="// ACCIONES" class="text-center full-width-mobile">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a href="{% url 'tienda:pedido_detalle' pedido.id %}" class="btn btn-sm cyber-btn cyber-btn-outline-blue" title="Inspeccionar Pedido">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    {% if pedido.estado == 'PAGADO' or pedido.estado == 'ENVIADO' %}
+                                    <a href="{% url 'tienda:generar_factura_pdf' pedido.id %}" class="btn btn-sm cyber-btn cyber-btn-outline-red no-transition" title="Descargar Factura PDF">
+                                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center p-5 text-muted full-width-mobile">
+                                >_ No hay pedidos con el estado '{{ estado_actual }}'.<span class="blink-cursor">_</span> 
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if is_paginated %}
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Navegación de pedidos">
+            <ul class="pagination cyber-pagination gap-2">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link cyber-btn cyber-btn-outline-green bg-transparent" href="?page=1&estado={{ estado_actual }}&q={{ query }}">&laquo; PRIMERA</a></li>
+                <li class="page-item"><a class="page-link cyber-btn cyber-btn-outline-green bg-transparent" href="?page={{ page_obj.previous_page_number }}&estado={{ estado_actual }}&q={{ query }}">ANTERIOR</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link cyber-btn fw-bold" style="background-color: var(--neon-green); border-color: var(--neon-green); color: var(--bg-primary);">PÁGINA {{ page_obj.number }} DE {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link cyber-btn cyber-btn-outline-green bg-transparent" href="?page={{ page_obj.next_page_number }}&estado={{ estado_actual }}&q={{ query }}">SIGUIENTE</a></li>
+                <li class="page-item"><a class="page-link cyber-btn cyber-btn-outline-green bg-transparent" href="?page={{ page_obj.paginator.num_pages }}&estado={{ estado_actual }}&q={{ query }}">ÚLTIMA &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block modals %}
+<!-- Modal de Confirmación para Anular Pedido -->
+<div class="modal fade" id="anularPedidoModal" tabindex="-1" aria-hidden="true" style="font-family: 'Courier New', Courier, monospace;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-0 border tarjeta-cristal bg-dark-1 border-neon-red" style="box-shadow: 0 0 30px rgba(255, 0, 60, 0.2);">
+            <div class="modal-header border-bottom border-neon-red" style="background-color: rgba(255,0,60,0.05);">
+                <h5 class="modal-title fw-bold text-neon-red">>_ REQUIERE_AUTORIZACION_CRITICA.exe<span class="blink-cursor">_</span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="bi bi-exclamation-triangle-fill fs-1 text-neon-red mb-3 d-block" style="text-shadow: 0 0 15px rgba(255,0,60,0.6);"></i>
+                <p id="anularPedidoMessage" class="fs-5 text-light mb-0"></p>
+            </div>
+            <div class="modal-footer border-top-0 justify-content-center gap-3 pb-4">
+                <button type="button" class="btn rounded-0 fw-bold py-2 px-4 cyber-btn cyber-btn-outline-blue" data-bs-dismiss="modal">[ ABORTAR ]</button>
+                <button type="button" id="confirmAnularBtn" class="btn rounded-0 fw-bold py-2 px-4 cyber-btn" style="background-color: #ff003c; color: #fff; border: 1px solid #ff003c; box-shadow: 0 0 15px rgba(255,0,60,0.4);">[ CONFIRMAR ANULACIÓN ]</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modals %}

@@ -1,0 +1,16 @@
+User-agent: *
+
+# Bloquear bots en rutas privadas y de gestión (Mejora la seguridad y ahorra Crawl Budget)
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+Disallow: /logout/
+Disallow: /dashboard/
+Disallow: /actualizar_perfil/
+Disallow: /cambiar_password/
+Disallow: /tienda/carrito/
+Disallow: /tienda/checkout/
+Disallow: /tienda/gestion/
+
+# Ubicación del mapa del sitio dinámico
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml

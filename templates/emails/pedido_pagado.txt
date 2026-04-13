@@ -1,0 +1,13 @@
+¡Pago Confirmado, {{ pedido.nombre_cliente }}!
+
+Hemos recibido y procesado correctamente el pago de tu pedido #{{ pedido.id }} en GatoPobreTECK.
+
+Estado Actual: {{ nuevo_estado }}
+
+Adjunto a este correo encontrarás la factura de tu compra en formato PDF. Estamos preparando tu hardware para el envío.
+
+Puedes ver los detalles completos de tu pedido iniciando sesión en nuestro sitio web y accediendo a tu terminal personal.
+
+Gracias por confiar en GatoPobreTECK.
+---
+© {% now "Y" %} GatoPobreTECK. Todos los derechos encriptados.

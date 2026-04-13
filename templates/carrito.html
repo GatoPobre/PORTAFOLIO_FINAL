@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load cyber_filtros %}
+
+{% block title %}Inventario Temporal | GatoPobre{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5 scanlines-container" style="font-family: 'Courier New', Courier, monospace;">
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold m-0" style="color: #00f3ff; text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);">
+                >_ INVENTARIO_EN_CACHE.sys<span class="blink-cursor">_</span>
+            </h2>
+        </div>
+    </div>
+    
+    {% if carro %}
+        <div class="card rounded-0 border tarjeta-cristal bg-dark-1 border-neon-green mb-4">
+            <div class="card-header border-bottom-0 pt-3 pb-0 bg-transparent">
+                <span class="fw-bold text-neon-green letter-spacing-1 table-header-font-size">// SELECCION_ACTUAL</span>
+            </div>
+
+            <div class="card-body p-0 pt-3"> 
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0 cyber-table" style="background-color: transparent; --bs-table-bg: transparent; --bs-table-hover-bg: rgba(0, 255, 65, 0.1);">
+                        <thead class="border-neon-green"> 
+                            <tr>
+                                <th class="py-3 ps-4" style="color: #00ff41;">MODULO</th>
+                                <th class="text-center py-3" style="color: #00ff41;">VALOR_BASE</th>
+                                <th class="text-center py-3" style="color: #00ff41;">VOLUMEN</th>
+                                <th class="text-end py-3" style="color: #00ff41;">SUBTOTAL</th>
+                                <th class="text-center py-3 pe-4" style="color: #ff003c;">ACCIÓN</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-tbody" style="border-top: none;" data-update-url="{% url 'tienda:actualizar_carro' 0 %}">
+                            {% for producto_id, item in carro.items %}
+                            <tr style="border-bottom: 1px solid rgba(0, 243, 255, 0.2);">
+                                <td data-label="// MODULO" class="fw-bold ps-4 full-width-mobile" style="color: #00f3ff;">
+                                    <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3">
+                                        {% if item.imagen %}
+                                        <img src="{{ item.imagen }}" alt="{{ item.nombre }}" style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #00f3ff;">
+                                        {% endif %}
+                                        <span>{{ item.nombre }}</span>
+                                    </div>
+                                </td>
+                                <td data-label="// VALOR_BASE" class="text-center text-legible-secondary">${{ item.precio|puntos }}</td>
+                                <td data-label="// VOLUMEN" class="text-center">
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                        <button id="btn-minus-{{ producto_id }}" class="btn btn-sm btn-outline-cyber-blue rounded-0" onclick="updateCart('{{ producto_id }}', -1)" style="border-color: {% if item.cantidad <= 1 %}#ff003c; color: #ff003c; opacity: 0.5;{% else %}#00f3ff; color: #00f3ff; opacity: 1;{% endif %} background: transparent; transition: 0.3s;" {% if item.cantidad <= 1 %}disabled{% endif %} aria-label="Disminuir cantidad">-</button>
+                                        <span class="fw-bold text-cyber-blue" id="qty-{{ producto_id }}" style="min-width: 25px;" aria-live="polite" aria-atomic="true">{{ item.cantidad }}</span>
+                                        <button class="btn btn-sm btn-outline-cyber-blue rounded-0" onclick="updateCart('{{ producto_id }}', 1)" style="border-color: #00f3ff; color: #00f3ff; background: transparent;" aria-label="Aumentar cantidad">+</button>
+                                    </div>
+                                </td>
+                                <td data-label="// SUBTOTAL" class="text-end fw-bold" id="subtotal-{{ producto_id }}" style="color: #00ff41; text-shadow: 0 0 5px rgba(0,255,65,0.4);">
+                                {% widthratio item.precio 1 item.cantidad as subtotal %}
+                                ${{ subtotal|puntos }}
+                                </td>
+                                <td data-label="// ACCIÓN" class="text-center pe-4 full-width-mobile">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#cyberConfirmModal" data-url="{% url 'tienda:eliminar_producto' producto_id %}" data-product="{{ item.nombre }}" class="btn btn-sm rounded-0 custom-cyber-danger" title="Purgar de la memoria" aria-label="Eliminar {{ item.nombre }} de la caché">
+                                        [ PURGAR ]
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="bg-dark-2" style="border-top: 2px solid #00ff41;">
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold fs-5 py-4 full-width-mobile" style="color: #00ff41;">>_ TOTAL REQUERIDO:</td>
+                                <td colspan="2" class="text-end fw-bold fs-4 py-4 full-width-mobile" id="cart-total" style="color: #00f3ff; text-shadow: 0 0 8px rgba(0,243,255,0.5);">${{ total|puntos }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mt-4">
+            <div class="d-flex flex-column flex-md-row gap-3">
+                <a href="{% url 'tienda:tienda' %}" class="btn rounded-0 fw-bold py-2 cyber-btn cyber-btn-outline-blue letter-spacing-1">
+                    <i class="bi bi-arrow-left me-2"></i>[ VOLVER A TERMINAL ]
+                </a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#cyberConfirmModal" data-url="{% url 'tienda:vaciar_carro' %}" data-purge-all="true" class="btn rounded-0 fw-bold py-2 cyber-btn cyber-btn-outline-red letter-spacing-1">
+                    <i class="bi bi-trash-fill me-2"></i>[ PURGAR CACHÉ COMPLETA ]
+                </a>
+            </div>
+            <a href="{% url 'tienda:checkout' %}" class="btn rounded-0 fw-bold py-2 px-5 cyber-btn cyber-btn-green letter-spacing-2">
+                [ INICIAR PROTOCOLO DE PAGO ] <i class="bi bi-credit-card-fill ms-2"></i>
+            </a>
+        </div>
+        
+    {% else %}
+        <div class="card rounded-0 border p-4 p-md-5 text-center mt-5 tarjeta-cristal bg-dark-1" style="border-color: #ff003c !important; box-shadow: 0 0 20px rgba(255, 0, 60, 0.15);">
+            <i class="bi bi-exclamation-triangle fs-1 mb-3" style="color: #ff003c; text-shadow: 0 0 10px rgba(255,0,60,0.5);"></i>
+            <h3 class="fw-bold m-0" style="color: #ff003c; text-shadow: 0 0 5px rgba(255,0,60,0.5);">>_ ALERTA: MEMORIA CACHÉ VACÍA</h3>
+            <p class="mt-3 text-legible-secondary">No se han detectado módulos para extracción. Regrese a la vitrina principal para seleccionar paquetes.</p>
+            <div class="mt-4">
+                <a href="{% url 'tienda:tienda' %}" class="btn rounded-0 fw-bold py-2 px-4 custom-cyber-btn-outline" style="background-color: transparent; border: 1px solid #00f3ff; color: #00f3ff; transition: 0.3s;">
+                    [ ABRIR CONEXIÓN A TIENDA ]
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}
+
+{% block modals %}
+<!-- Modal Cyberpunk de Confirmación -->
+<div class="modal fade" id="cyberConfirmModal" tabindex="-1" aria-hidden="true" style="font-family: 'Courier New', Courier, monospace; ">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-0 border tarjeta-cristal bg-dark-1 border-neon-red" style="box-shadow: 0 0 30px rgba(255, 0, 60, 0.2);">
+            <div class="modal-header border-bottom border-neon-red" style="background-color: rgba(255,0,60,0.05);">
+                <h5 class="modal-title fw-bold text-neon-red">>_ REQUIERE_AUTORIZACION.exe<span class="blink-cursor">_</span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="bi bi-exclamation-triangle-fill fs-1 text-neon-red mb-3 d-block" style="text-shadow: 0 0 15px rgba(255,0,60,0.6);"></i>
+                <p id="cyberConfirmMessage" class="fs-5 text-light mb-0"></p>
+            </div>
+            <div class="modal-footer border-top-0 justify-content-center gap-3 pb-4">
+                <button type="button" class="btn rounded-0 fw-bold py-2 px-4 cyber-btn cyber-btn-outline-blue" data-bs-dismiss="modal">[ ABORTAR ]</button>
+            <form id="cyberConfirmForm" method="post" action="" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" id="cyberConfirmBtn" class="btn rounded-0 fw-bold py-2 px-4 cyber-btn" style="background-color: #ff003c; color: #fff; border: 1px solid #ff003c; box-shadow: 0 0 15px rgba(255,0,60,0.4);">[ CONFIRMAR PURGA ]</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modals %}

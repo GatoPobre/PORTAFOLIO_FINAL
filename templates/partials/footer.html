@@ -1,0 +1,57 @@
+<footer class="mt-auto border-top cyber-footer">
+    <div class="container py-4 py-md-5">
+        <div class="row">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <h5 class="fw-bold mb-3 cyber-footer-title">>_ SISTEMA_GATOPROBRETECK</h5>
+                <p class="text-secondary small mb-1">ESTADO: <span class="fw-bold text-neon-blue">ONLINE</span></p>
+                <p class="small mb-1 text-legible-secondary">PROTOCOLO: <span class="text-neon-blue">SEGURO</span></p>
+                
+                <div class="mt-4">
+                    <button id="theme-toggle" class="btn btn-sm rounded-0 cyber-btn cyber-btn-outline-blue d-inline-flex align-items-center letter-spacing-1 fw-bold" aria-label="Alterar interfaz óptica">
+                        <i class="bi bi-lightning-charge-fill me-2 fs-6"></i> [ SOBRECARGA ÓPTICA ]
+                    </button>
+                </div>
+
+                <p class="text-legible-secondary small mt-4 mb-0">
+                    © {% now "Y" %} GatoPobreTECK.<br>TODOS LOS DERECHOS ENCRIPTADOS.
+                </p>
+            </div>
+
+            <div class="col-md-4 mb-4 mb-md-0">
+                <h5 class="fw-bold mb-3 cyber-footer-title">// DIRECTORIOS</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="{% url 'miapp:inicio' %}" class="text-decoration-none cyber-link">[ INICIO.exe ]</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'tienda:tienda' %}" class="text-decoration-none cyber-link">[ TIENDA.bat ]</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'miapp:contacto' %}" class="text-decoration-none cyber-link">[ CONTACTO.sh ]</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'miapp:politicas' %}" class="text-decoration-none cyber-link cyber-blink-red">[ PRIVACIDAD.md ]</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h5 class="fw-bold mb-3 cyber-footer-title">// NODOS_DE_RED</h5>
+                <div class="d-flex gap-3 mt-3">
+                    <a href="#" class="btn rounded-0 d-flex align-items-center justify-content-center cyber-social-btn" aria-label="Visitar nuestro perfil de GitHub">
+                        <i class="bi bi-github fs-5" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="btn rounded-0 d-flex align-items-center justify-content-center cyber-social-btn" aria-label="Visitar nuestro canal de YouTube">
+                        <i class="bi bi-youtube fs-5" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="btn rounded-0 d-flex align-items-center justify-content-center cyber-social-btn" aria-label="Visitar nuestro perfil de LinkedIn">
+                        <i class="bi bi-linkedin fs-5" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <p class="text-legible-secondary small mt-3 mb-0 text-center text-md-start">>_ Esperando conexión externa<span class="blink-cursor">_</span></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="w-100 footer-divider"></div>
+</footer>

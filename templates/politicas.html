@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Políticas de Privacidad | GatoPobre{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 mb-5 scanlines-container" style="font-family: 'Courier New', Courier, monospace;">
+    <!-- Migas de pan visuales (UX) -->
+    <div class="row mb-3 justify-content-center">
+        <div class="col-lg-10">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0" style="font-size: 0.85rem; letter-spacing: 1px;">
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:inicio' %}" class="text-decoration-none text-cyber-blue hover-neon-green">>_ INICIO.exe</a></li>
+                    <li class="breadcrumb-item active fw-bold text-neon-green" aria-current="page" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">PROTOCOLOS_DE_PRIVACIDAD.md</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card rounded-0 border tarjeta-cristal bg-dark-1 border-neon-blue" style="box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);">
+                <div class="card-header border-bottom-0 pt-4 pb-0 bg-transparent">
+                    <h2 class="mb-0 fw-bold text-cyber-blue letter-spacing-1">
+                        >_ PROTOCOLOS_DE_PRIVACIDAD.md<span class="blink-cursor">_</span>
+                    </h2>
+                </div>
+
+                <div class="card-body p-4 p-md-5 pt-4 text-legible-secondary">
+                    <p class="mb-5 text-neon-green">// Última sincronización de archivo: {% now "d/m/Y" %}</p>
+
+                    <h4 class="fw-bold text-cyber-blue mb-3">> 1. RECOPILACIÓN Y VOLCADO DE DATOS</h4>
+                    <p>En GatoPobre.TEK operamos bajo estrictos protocolos de confidencialidad. Al utilizar nuestro sistema de "Reportes y Sugerencias", el sistema ejecuta un script automatizado para recopilar métricas de tu sesión. Esto nos permite depurar anomalías en el mainframe. Los datos extraídos incluyen:</p>
+                    <ul>
+                        <li class="mb-2"><strong class="text-neon-green">Captura de Interfaz:</strong> Una imagen estática del estado de tu pantalla en el momento exacto de enviar el reporte (generada del lado del cliente).</li>
+                        <li class="mb-2"><strong class="text-neon-green">Identificador de Navegador (User Agent):</strong> Información técnica básica sobre tu software de navegación y sistema operativo.</li>
+                        <li><strong class="text-neon-green">Coordenadas (URL de Origen):</strong> El enlace exacto dentro de nuestro sistema donde se detectó el fallo.</li>
+                    </ul>
+
+                    <h4 class="fw-bold text-cyber-blue mb-3 mt-5">> 2. USO DE LA INFORMACIÓN ENCRIPTADA</h4>
+                    <p>Los datos extraídos se procesan de forma aislada y se utilizan exclusivamente para propósitos de reparación técnica (debugging) y mejora de la experiencia de usuario. <strong>GatoPobre no comparte, no vende y no transfiere</strong> estos registros a corporaciones de terceros ni nodos externos.</p>
+
+                    <h4 class="fw-bold text-cyber-blue mb-3 mt-5">> 3. SEGURIDAD DEL NODO LOCAL</h4>
+                    <p>Nuestros servidores implementan algoritmos de seguridad de alto nivel para proteger tus capturas de pantalla y comunicaciones. Solo los técnicos nivel Root (Administradores del Sistema) tienen autorización para visualizar esta base de conocimientos a través de canales protegidos.</p>
+
+                    <h4 class="fw-bold text-cyber-blue mb-3 mt-5">> 4. TUS DERECHOS DE USUARIO</h4>
+                    <p>Puedes solicitar en cualquier momento la purga permanente de tus reportes y capturas de nuestros servidores abriendo un ticket directo en el <a href="{% url 'miapp:contacto' %}" class="text-cyber-blue text-decoration-none fw-bold">[ COMUNICADOR_CIFRADO.sh ]</a> de nuestra sección de Contacto.</p>
+
+                    <div class="mt-5 p-3 border bg-dark-2 border-neon-red">
+                        <p class="mb-0 text-neon-red fw-bold">>_ ADVERTENCIA LEGAL: Al marcar la casilla de consentimiento explícito en el formulario de Feedback, confirmas haber leído, comprendido y aceptado este protocolo de extracción de datos visuales y de red.</p>
+                    </div>
+                    
+                    <div class="mt-5 pt-3 text-center border-top border-neon-blue" style="border-top-color: rgba(0, 243, 255, 0.2) !important;">
+                        <button onclick="if(window.history.length > 1 && document.referrer) { history.back(); } else { window.close(); window.location.href='{% url 'miapp:inicio' %}'; }" class="btn rounded-0 fw-bold py-2 px-4 cyber-btn cyber-btn-outline-blue letter-spacing-1">
+                            <i class="bi bi-arrow-return-left me-2"></i>[ RETORNAR AL NODO ANTERIOR ]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

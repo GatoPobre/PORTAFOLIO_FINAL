@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Contacto | GatoPobre{% endblock title %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5 scanlines-container" style="font-family: 'Courier New', Courier, monospace;">
+    <!-- Migas de pan visuales (UX) -->
+    <div class="row mt-2">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0" style="font-size: 0.85rem; letter-spacing: 1px;">
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:inicio' %}" class="text-decoration-none text-cyber-blue hover-neon-green">>_ INICIO.exe</a></li>
+                    <li class="breadcrumb-item active fw-bold text-neon-green" aria-current="page" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">CONTACTO.sh</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4 g-4 g-lg-5">
+        
+        <!-- COLUMNA FAQ (BASE DE CONOCIMIENTO) -->
+        <div class="col-md-10 col-lg-5">
+            <div class="mb-4 tarjeta-cristal p-4 border border-neon-blue bg-dark-1" style="box-shadow: 0 0 15px rgba(0,243,255,0.1);">
+                <h3 class="fw-bold text-cyber-blue mb-3">>_ BASE_DE_CONOCIMIENTO.faq<span class="blink-cursor">_</span></h3>
+                <p class="text-legible-secondary mb-0">Respuestas a las interrogantes más comunes de los usuarios en la red. Si tu anomalía persiste, utiliza el comunicador cifrado contiguo.</p>
+            </div>
+            
+            <div class="accordion cyber-accordion" id="faqAccordion">
+                <!-- Item 1 -->
+                <div class="accordion-item bg-dark-2 mb-3 tarjeta-cristal">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed fw-bold text-uppercase letter-spacing-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            // TIEMPOS_DE_ENTREGA
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-legible-secondary border-top border-neon-blue" style="background-color: rgba(0,0,0,0.4);">
+                            Las entregas estándar en la red urbana toman 24-48 ciclos (horas). Los envíos a los sectores periféricos pueden demorar hasta 72 horas. Todo paquete va fuertemente encriptado y en transporte discreto.
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="accordion-item bg-dark-2 mb-3 tarjeta-cristal">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed fw-bold text-uppercase letter-spacing-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            // RASTREO_Y_SEGURIDAD
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-legible-secondary border-top border-neon-blue" style="background-color: rgba(0,0,0,0.4);">
+                            Negativo. Todo nuestro hardware pasa por un proceso riguroso de limpieza de firmas digitales. Tu identidad y coordenadas de entrega están seguras tras múltiples barreras de proxy.
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="accordion-item bg-dark-2 mb-3 tarjeta-cristal">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed fw-bold text-uppercase letter-spacing-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            // POLITICA_DE_REEMPLAZO
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-legible-secondary border-top border-neon-blue" style="background-color: rgba(0,0,0,0.4);">
+                            Si el hardware presenta fallos en sus circuitos (no provocados por el usuario) dentro de los primeros 15 ciclos, abre un ticket en este comunicador enviando tu ID_ORDEN. Procederemos con un reemplazo inmediato tras la verificación del daño.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMNA FORMULARIO DE CONTACTO -->
+        <div class="col-md-10 col-lg-6">
+            
+            <div class="card rounded-0 border tarjeta-cristal h-100 bg-dark-1" style="border-color: #00f3ff !important; box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);">
+                <div class="card-header border-bottom-0 pt-4 pb-0 bg-transparent">
+                    <h3 class="mb-0 fw-bold text-cyber-blue letter-spacing-1">
+                        >_ INICIAR_COMUNICACION.exe<span class="blink-cursor">_</span>
+                    </h3>
+                </div>
+
+                <div class="card-body p-4 p-md-5 pt-4">
+                    <p class="mb-5 text-neon-green">// Ingresa tus coordenadas y tu mensaje. La conexión está encriptada punto a punto.</p> 
+
+                    <form id="formulario-principal" method="post" action="" novalidate class="cyber-form" aria-label="Formulario de contacto">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="mb-4"> 
+                                <label class="form-label fw-bold text-cyber-blue text-uppercase" for="{{ field.id_for_label }}">
+                                    {{ field.label }} {% if field.field.required %}<span class="text-neon-red" aria-hidden="true">*</span><span class="visually-hidden"> (Requerido)</span>{% endif %}
+                                </label>
+                                
+                                {{ field }} 
+                                
+                                {% if field.errors %}
+                                    <div id="{{ field.id_for_label }}_error" class="small mt-2 fw-bold" style="color: #ff003c; text-shadow: 0 0 5px rgba(255,0,60,0.5);" role="alert">
+                                        >_ ERROR: {{ field.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                                
+                                {% if field.help_text %}
+                                    <div id="{{ field.id_for_label }}_help" class="form-text mt-1 text-legible-muted small">{{ field.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="d-grid mt-5">
+                            <button class="btn rounded-0 fw-bold py-3 cyber-btn cyber-btn-outline-green letter-spacing-2 d-flex justify-content-center align-items-center" type="submit" id="btn-submit">
+                                [ TRANSMITIR PAQUETES ]
+                                <span id="spinner-submit" class="spinner-border spinner-border-sm d-none ms-3" role="status" aria-hidden="true" style="color: #050505;"></span>
+                            </button>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

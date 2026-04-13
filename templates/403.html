@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Error 403 - Acceso Denegado | GatoPobre{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5 scanlines-container text-center" style="font-family: 'Courier New', Courier, monospace;">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card rounded-0 border p-4 p-md-5 tarjeta-cristal bg-dark-1 border-neon-red cyber-jolt cyber-breathe-red">
+                <div class="mb-4">
+                    <i class="bi bi-shield-lock-fill fs-1 display-1 text-neon-red" style="text-shadow: 0 0 20px rgba(255,0,60,0.6);"></i>
+                </div>
+
+                <h1 class="display-1 fw-bold mb-2 text-uppercase text-neon-red cyber-glitch-text" data-text="403" style="text-shadow: 0 0 15px rgba(255,0,60,0.4);">
+                    403
+                </h1>
+                <h3 class="fw-bold mb-4 text-neon-red">
+                    >_ ACCESO_DENEGADO<span class="blink-cursor">_</span>
+                </h3>
+                
+                <div class="text-start p-3 mb-4 border mx-auto bg-dark-2" style="border-color: #ff003c !important; max-width: 400px;">
+                    <p class="mb-1 text-legible-secondary">[SYS] Analizando nivel de autorización...</p> 
+                    <p class="mb-1 text-neon-red fw-bold">[ERR] Privilegios insuficientes detectados.</p>
+                    <p class="mb-0 mt-3 text-warning fw-bold">> ADVERTENCIA: INTENTO DE INTRUSIÓN REGISTRADO.</p>
+                </div>
+                
+                <p class="text-legible-muted mb-4 mt-2">Tus credenciales actuales no tienen los permisos necesarios para visualizar este sector del mainframe.</p>
+                
+                <div class="mt-4 d-flex flex-column flex-sm-row justify-content-center gap-3">
+                    <a href="{% url 'miapp:login' %}" class="btn fw-bold py-2 px-4 cyber-btn cyber-btn-outline-green letter-spacing-1">
+                        <i class="bi bi-person-badge me-2"></i>[ CAMBIAR IDENTIDAD ]
+                    </a>
+                    <a href="{% url 'miapp:inicio' %}" class="btn fw-bold py-2 px-4 cyber-btn cyber-btn-outline-blue letter-spacing-1">
+                        [ ABORTAR CONEXIÓN ]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

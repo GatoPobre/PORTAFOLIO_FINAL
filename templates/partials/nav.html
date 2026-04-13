@@ -1,0 +1,128 @@
+<nav class="navbar navbar-expand-lg navbar-dark border-bottom cyber-navbar border-neon-blue">
+  <div class="container">
+    {% load static %}
+    <a class="navbar-brand d-flex align-items-center cyber-glitch-hover" href="{% url 'miapp:inicio' %}">
+      <img src="{% static 'img/logo.png' %}" alt="Logo de GatoPobre" width="50" height="50" class="me-2 rounded-0 border navbar-brand-logo">
+      <span class="fw-bold fs-4 navbar-brand-text">>_ GatoPobreTECK</span>
+    </a>
+    
+    <button class="navbar-toggler rounded-0 custom-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="cyber-hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </button>
+    
+    <div class="offcanvas-lg offcanvas-end custom-offcanvas-mobile" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header border-bottom border-neon-blue d-lg-none" style="background-color: var(--bg-secondary);">
+        <h5 class="offcanvas-title text-neon-green fw-bold mb-0" id="offcanvasNavbarLabel" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">>_ MENU_SISTEMA</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasNavbar" aria-label="Cerrar"></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column">
+      
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 mt-3 mt-lg-0 gap-2">
+        <li class="nav-item">
+          <a class="nav-link cyber-nav-link {% if request.resolver_match.url_name == 'inicio' %}active-neon{% endif %}" href="{% url 'miapp:inicio' %}" {% if request.resolver_match.url_name == 'inicio' %}aria-current="page"{% endif %}>
+            <span class="nav-bracket">[</span> INICIO <span class="nav-bracket">]</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link cyber-nav-link {% if request.resolver_match.url_name == 'tienda' %}active-neon{% endif %}" href="{% url 'tienda:tienda' %}" {% if request.resolver_match.url_name == 'tienda' %}aria-current="page"{% endif %}>
+            <span class="nav-bracket">[</span> TIENDA <span class="nav-bracket">]</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link cyber-nav-link {% if request.resolver_match.url_name == 'contacto' %}active-neon{% endif %}" href="{% url 'miapp:contacto' %}" {% if request.resolver_match.url_name == 'contacto' %}aria-current="page"{% endif %}>
+            <span class="nav-bracket">[</span> CONTACTO <span class="nav-bracket">]</span>
+          </a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-3 gap-lg-0 mt-auto mt-lg-0 pb-4 pb-lg-0">
+        
+        <li class="nav-item me-lg-3">
+          <a href="{% url 'tienda:ver_carro' %}" class="btn rounded-0 d-flex align-items-center btn-cyber-cart w-100 justify-content-center py-2 px-3 position-relative" aria-label="{{ cantidad_carrito|default:'0' }} artículos en el carrito">
+            <i class="bi bi-cart3 fs-5"></i>
+            <span class="ms-2">CARRITO</span>
+            
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle pulse-neon-green cyber-cart-badge" aria-hidden="true">
+              {{ cantidad_carrito|default:"0" }}
+            </span>
+          </a>
+        </li>
+        {% if not request.user.is_authenticated %}
+          <li class="nav-item d-flex flex-column flex-lg-row gap-2 mt-2 mt-lg-0">
+            <a class="btn fw-bold custom-cyber-login-btn w-100 cyber-btn cyber-btn-outline-green" href="{% url 'miapp:login' %}">
+              INGRESAR
+            </a>
+            <a class="btn fw-bold custom-cyber-register-btn w-100 cyber-btn cyber-btn-green" href="{% url 'miapp:registro' %}">
+              REGISTRO
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item dropdown cyber-dropdown">
+            <a class="nav-link d-flex align-items-center justify-content-between w-100 text-neon-green" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+              <div class="d-flex align-items-center justify-content-center justify-content-lg-start">
+                  <img src="{{ request.user.perfil.imagen_avatar.url }}" alt="Avatar" class="rounded-0 border dropdown-avatar">
+                  <span class="ms-2 fw-bold text-uppercase">>_ {{ user.username }}</span>
+              </div>
+              <i class="bi bi-chevron-down d-lg-none text-neon-green"></i>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow rounded-0 border cyber-dropdown-menu" aria-labelledby="navbarDropdownUser">
+              <li>
+                <a class="dropdown-item cyber-dropdown-item" href="{% url 'miapp:dashboard' %}">
+                  <i class="bi bi-terminal me-2"></i>Terminal Personal
+                </a>
+              </li>
+              
+              {% if perms.tienda.view_producto %}
+              <li>
+                <a class="dropdown-item cyber-dropdown-item" href="{% url 'tienda:producto_list' %}">
+                  <i class="bi bi-box-seam me-2"></i>Gestión Productos
+                </a>
+              </li>
+              {% endif %}
+              {% if perms.tienda.view_categoria %}
+              <li>
+                <a class="dropdown-item cyber-dropdown-item" href="{% url 'tienda:categoria_list' %}">
+                  <i class="bi bi-tags-fill me-2"></i>Gestión Categorías
+                </a>
+              </li>
+              {% endif %}
+              {% if perms.tienda.view_pedido %}
+              <li>
+                <a class="dropdown-item cyber-dropdown-item" href="{% url 'tienda:pedido_gestion' %}">
+                  <i class="bi bi-receipt-cutoff me-2"></i>Gestión Pedidos
+                </a>
+              </li>
+              {% endif %}
+              
+              {% if request.user.is_staff %}
+              <li><hr class="dropdown-divider border-neon-blue" style="opacity: 0.3;"></li>
+              <li>
+                <a class="dropdown-item cyber-dropdown-item text-warning" href="{% url 'admin:index' %}">
+                  <i class="bi bi-cpu me-2"></i>Modo Root (Admin)
+                </a>
+              </li>
+              {% endif %}
+              
+              <li><hr class="dropdown-divider border-neon-red" style="opacity: 0.5;"></li>
+              <li>
+                <form action="{% url 'miapp:logout' %}" method="post" class="m-0 p-0">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item d-flex align-items-center fw-bold cyber-logout-btn">
+                    <i class="bi bi-power me-2"></i>DESCONECTAR
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </li>
+        {% endif %}
+      </ul>
+      
+      </div>
+    </div>
+  </div>
+</nav>

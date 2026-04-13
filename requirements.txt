@@ -1,0 +1,14 @@
+asgiref==3.11.1
+Django==6.0.2
+django-appconf==1.2.0
+django-cleanup==9.0.0
+django-debug-toolbar==6.3.0
+django_compressor==4.6.0
+dotenv==0.9.9
+mysqlclient==2.2.8
+pillow==12.1.1
+rcssmin==1.2.2
+rjsmin==1.2.5
+sqlparse==0.5.5
+tzdata==2025.3
+xhtml2pdf==0.2.11

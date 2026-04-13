@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Transacción Completada | GatoPobre Teck{% endblock %}
+
+{% block content %}
+<!-- Canvas para el fondo Matrix -->
+<canvas id="matrix-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.7;"></canvas>
+
+<div class="container mt-5 mb-5 scanlines-container text-center" style="font-family: 'Courier New', Courier, monospace; position: relative; z-index: 10;">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card rounded-0 border p-4 p-md-5 tarjeta-cristal bg-dark-1 border-neon-green" style="box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);">
+                <div class="mb-4">
+                    <i class="bi bi-check-circle fs-1 display-1 text-neon-green" style="text-shadow: 0 0 20px rgba(0,255,65,0.6);"></i>
+                </div>
+
+                <h1 class="display-5 fw-bold mb-4 text-uppercase text-neon-green">
+                    <span id="typewriter-text"></span><span class="blink-cursor">_</span>
+                </h1>
+                
+                <div class="text-start p-4 mb-4 border mx-auto bg-dark-2" style="border-color: #1a4d4d !important; max-width: 500px;">
+                    <p class="mb-1 text-legible-muted sys-msg" style="opacity: 0;">[SYS] Iniciando volcado de memoria...</p> 
+                    <p class="mb-1 text-legible-secondary sys-msg" style="opacity: 0;">[SYS] Verificando firmas de encriptación...</p>
+                    <p class="mb-1 text-legible-secondary sys-msg" style="opacity: 0;">[SYS] Estableciendo conexión con el banco central...</p>
+                    <p class="mb-1 text-neon-blue sys-msg" style="opacity: 0;">[NET] Transferencia de créditos: <span class="fw-bold text-success">ACEPTADA</span></p>
+                    <p class="mb-0 mt-2 fw-bold text-neon-green sys-msg" style="opacity: 0;">> ESTATUS: HARDWARE PREPARÁNDOSE PARA ENVÍO A COORDENADAS.</p>
+                </div>
+
+                <p class="fs-5 text-secondary mb-5">
+                    El registro de la transacción se ha guardado en tu terminal personal. El carrito de memoria caché ha sido purgado.
+                </p>
+                
+                <div>
+                    <a href="{% url 'tienda:tienda' %}" class="btn fw-bold py-3 px-5 cyber-btn cyber-btn-outline-blue letter-spacing-2">
+                        [ RETORNAR A LA RED PRINCIPAL ]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/exito-animation.js' %}"></script>
+{% endblock extra_js %}

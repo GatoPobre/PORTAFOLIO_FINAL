@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load cyber_filtros %}
+
+{% block title %}Inicio | GatoPobre{% endblock title %}
+
+{% block content %}
+<div class="container-fluid mt-4 mb-5" style="font-family: 'Courier New', Courier, monospace;">
+
+    <!-- Migas de pan visuales (UX) -->
+    <div class="container py-2">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-0" style="font-size: 0.85rem; letter-spacing: 1px;">
+                <li class="breadcrumb-item"><a href="{% url 'miapp:inicio' %}" class="text-decoration-none text-cyber-blue hover-neon-green">>_ INICIO.exe</a></li>
+                <li class="breadcrumb-item active fw-bold text-neon-green" aria-current="page" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">TIENDA.bat</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="p-4 p-md-5 mb-4 mb-md-5 rounded-0 border tarjeta-cristal bg-dark-1" style="border-color: #00ff41 !important; box-shadow: 0 0 20px rgba(0, 255, 65, 0.15);">
+        <div class="container py-3 py-md-4 text-center text-md-start">
+            <h1 class="display-5 fw-bold" style="color: #00ff41; text-shadow: 0 0 8px rgba(0,255,65,0.6);">
+                >_ Tienda GatoPobre.TEK<span class="blink-cursor">_</span>
+            </h1>
+            <p class="col-md-12 fs-4 mt-3" style="color: #00f3ff;">
+                Compra aquí los últimos módulos y productos tecnológicos. 
+            </p>
+            <a href="{% url 'tienda:tienda' %}" class="btn rounded-0 fw-bold mt-4 px-4 cyber-btn cyber-btn-outline-green letter-spacing-1">
+                [ {{ mi_boton }} ]
+            </a>
+        </div>
+    </div>
+
+    <div class="container p-3 p-md-5 rounded-0 border tarjeta-cristal bg-dark-1" style="border-color: #00f3ff !important; box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);">
+        <h2 class="text-center fw-bold mb-5" style="color: #00f3ff; text-transform: uppercase;">
+            // NUESTROS_ÚLTIMOS_PRODUCTOS.exe
+        </h2>
+        
+        <!-- Buscador Cyberpunk -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8 col-lg-6">
+                <form method="GET" action="{% url 'tienda:tienda' %}" class="cyber-form">
+                    <div class="input-group" style="box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);">
+                        <span class="input-group-text bg-dark-2 border-neon-blue text-cyber-blue rounded-0">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" name="q" value="{{ query|default:'' }}" class="form-control border-neon-blue text-cyber-blue rounded-0" placeholder=">_ Buscar módulo por nombre o ID..." aria-label="Buscar producto">
+                        <button type="submit" class="btn cyber-btn cyber-btn-outline-blue rounded-0 fw-bold px-4">
+                            [ BUSCAR ]
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Filtro por Categorías -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-12 text-center">
+                <h5 class="fw-bold text-cyber-blue mb-3">// FILTRAR_POR_CATEGORIA</h5>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <a href="{% url 'tienda:tienda' %}{% if query %}?q={{ query }}{% endif %}" 
+                       class="btn rounded-0 cyber-btn {% if not categoria_seleccionada %}cyber-btn-green{% else %}cyber-btn-outline-green{% endif %}">
+                        [ TODAS ({{ total_productos_disponibles }}) ]
+                    </a>
+                    {% for cat in categorias %}
+                    <a href="?categoria={{ cat.id }}{% if query %}&q={{ query }}{% endif %}" 
+                       class="btn rounded-0 cyber-btn {% if categoria_seleccionada.id == cat.id %}cyber-btn-green{% else %}cyber-btn-outline-green{% endif %}">
+                        [ {{ cat.nombre|upper }} ({{ cat.num_productos }}) ]
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row text-center" id="productos-container">
+            {% for producto in ultimos_productos %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 rounded-0 border custom-cyber-card bg-dark-1 border-neon-green cyber-reveal">
+                    
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" class="card-img-top rounded-0" alt="{{ producto.nombre }}" style="object-fit: cover; height: 250px;" class="border-bottom border-neon-green">
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center bg-dark-1 border-bottom border-neon-green" style="height: 250px;">
+                            <span class="fw-bold text-neon-green letter-spacing-1">>_ SIN_IMAGEN.jpg</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column p-4">
+                        <h4 class="card-title fw-bold text-uppercase text-cyber-blue letter-spacing-1">{{ producto.nombre }}</h4>
+                        
+                        {% if producto.stock <= 0 %}
+                        <div class="mt-2 mb-2">
+                            <span class="badge rounded-0 border border-neon-red bg-dark-1 text-neon-red letter-spacing-1 shadow-sm" style="box-shadow: 0 0 10px rgba(255,0,60,0.4) !important;">
+                                >_ OFFLINE (SIN STOCK)
+                            </span>
+                        </div>
+                        {% else %}
+                        <div class="mt-2 mb-2">
+                            <span class="badge rounded-0 border border-neon-green bg-dark-1 text-neon-green letter-spacing-1">
+                                >_ ONLINE: {{ producto.stock }} UND.
+                            </span>
+                        </div>
+                        {% endif %}
+
+                        <p class="card-text fw-bold fs-3 mt-auto text-neon-green text-shadow-green">
+                            ${{ producto.precio|puntos }}
+                        </p>
+                        
+                        <a href="{% url 'tienda:producto_detalle' producto.id %}" class="btn rounded-0 fw-bold mt-auto cyber-btn cyber-btn-outline-blue text-uppercase">
+                            [ VER DETALLES ]
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                {% if query %}
+                    <p class="fs-4 fw-bold" style="color: #ff003c; text-shadow: 0 0 5px rgba(255,0,60,0.5);">
+                        >_ ERROR 404: NO SE ENCONTRARON COINCIDENCIAS PARA "{{ query }}"._
+                    </p>
+                    <a href="{% url 'tienda:tienda' %}" class="btn cyber-btn cyber-btn-outline-blue mt-3">[ LIMPIAR BÚSQUEDA ]</a>
+                {% else %}
+                    <p class="fs-4 fw-bold" style="color: #ff003c; text-shadow: 0 0 5px rgba(255,0,60,0.5);">
+                        >_ ERROR 404: INVENTARIO VACÍO. ESPERANDO NUEVO CARGAMENTO_
+                    </p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if page_obj.has_other_pages %}
+        <div class="d-flex justify-content-center mt-5" id="paginacion-container">
+            <nav aria-label="Navegación de terminal">
+                <ul class="pagination cyber-pagination gap-2 mb-0">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link cyber-btn cyber-btn-outline-blue bg-transparent" href="?page=1{% if query %}&q={{ query }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}">&laquo; PRIMERA</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link cyber-btn cyber-btn-outline-blue bg-transparent" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}">ANTERIOR</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link cyber-btn fw-bold" style="background-color: var(--cyber-blue); border-color: var(--cyber-blue); color: var(--bg-primary);">
+                            PÁGINA {{ page_obj.number }} DE {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link cyber-btn cyber-btn-outline-blue bg-transparent" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}">SIGUIENTE</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link cyber-btn cyber-btn-outline-blue bg-transparent" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}">ÚLTIMA &raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock content %}

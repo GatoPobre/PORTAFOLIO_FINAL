@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load cyber_filtros %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5 scanlines-container" style="font-family: 'Courier New', Courier, monospace;">
+    <!-- Migas de pan visuales (UX) -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0" style="font-size: 0.85rem; letter-spacing: 1px;">
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:inicio' %}" class="text-decoration-none text-cyber-blue hover-neon-green">>_ INICIO.exe</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:dashboard' %}" class="text-decoration-none text-cyber-blue hover-neon-green">TERMINAL_PERSONAL.sys</a></li>
+                    <li class="breadcrumb-item active fw-bold text-neon-green" aria-current="page" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">GESTION_INVENTARIO.exe</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mb-4 text-center text-md-start">
+        <h2 class="fw-bold m-0 text-neon-green text-shadow-green">
+            >_ {{ titulo }}<span class="blink-cursor">_</span>
+        </h2>
+        <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
+            {% if perms.tienda.view_categoria %}
+            <a href="{% url 'tienda:categoria_list' %}" class="btn cyber-btn cyber-btn-outline-blue">
+                [ GESTIONAR CATEGORÍAS ]
+            </a>
+            {% endif %}
+            {% if perms.tienda.add_producto %}
+            <a href="{% url 'tienda:producto_create' %}" class="btn cyber-btn cyber-btn-green">[+ REGISTRAR NUEVO MODULO]</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card rounded-0 border tarjeta-cristal bg-dark-1 border-neon-green">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0 cyber-table">
+                    <thead class="border-neon-green">
+                        <tr>
+                            <th class="py-3 ps-4 text-neon-green">ID</th>
+                            <th class="py-3 text-neon-green">IMAGEN</th>
+                            <th class="py-3 text-neon-green">NOMBRE</th>
+                            <th class="py-3 text-neon-green">CATEGORÍA</th>
+                            <th class="py-3 text-center text-neon-green">PRECIO</th>
+                            <th class="py-3 text-center text-neon-green">STOCK</th>
+                            <th class="py-3 text-center text-neon-green">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+                        <tr>
+                            <td data-label="// ID" class="fw-bold ps-4 text-neon-blue">#{{ producto.id }}</td>
+                            <td data-label="// IMAGEN">
+                                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="width: 50px; height: 50px; object-fit: cover;" class="border border-secondary">
+                            </td>
+                            <td data-label="// NOMBRE" class="fw-bold full-width-mobile text-cyber-blue">{{ producto.nombre }}</td>
+                            <td data-label="// CATEGORÍA" class="text-secondary">{{ producto.categoria.nombre|default:"Sin categoría" }}</td>
+                            <td data-label="// PRECIO" class="text-center text-secondary">${{ producto.precio|puntos }}</td>
+                            <td data-label="// STOCK" class="text-center">
+                                <span class="badge rounded-0 {% if producto.stock > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                                    {{ producto.stock|puntos }}
+                                </span>
+                            </td>
+                            <td data-label="// ACCIONES" class="text-center full-width-mobile">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    {% if perms.tienda.change_producto %}<a href="{% url 'tienda:producto_update' producto.pk %}" class="btn btn-sm cyber-btn cyber-btn-outline-blue flex-grow-1 flex-md-grow-0" title="Editar"><i class="bi bi-pencil-fill"></i><span class="d-md-none ms-2">EDITAR</span></a>{% endif %}
+                                    {% if perms.tienda.delete_producto %}<a href="{% url 'tienda:producto_delete' producto.pk %}" class="btn btn-sm cyber-btn cyber-btn-outline-red flex-grow-1 flex-md-grow-0" title="Eliminar"><i class="bi bi-trash-fill"></i><span class="d-md-none ms-2">ELIMINAR</span></a>{% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center p-5 text-muted full-width-mobile">
+                                >_ No hay productos registrados en el sistema.<span class="blink-cursor">_</span> 
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if is_paginated %}
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Navegación del registro">
+            <ul class="pagination cyber-pagination gap-2">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link cyber-btn cyber-btn-outline-green bg-transparent" href="?page=1">&laquo; PRIMERA</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link cyber-btn cyber-btn-outline-green bg-transparent" href="?page={{ page_obj.previous_page_number }}">ANTERIOR</a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link cyber-btn fw-bold" style="background-color: var(--neon-green); border-color: var(--neon-green); color: var(--bg-primary);">
+                        PÁGINA {{ page_obj.number }} DE {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link cyber-btn cyber-btn-outline-green bg-transparent" href="?page={{ page_obj.next_page_number }}">SIGUIENTE</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link cyber-btn cyber-btn-outline-green bg-transparent" href="?page={{ page_obj.paginator.num_pages }}">ÚLTIMA &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

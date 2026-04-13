@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Sesión | GatoPobre{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 mb-5 scanlines-container" style="font-family: 'Courier New', Courier, monospace;">
+    <!-- Migas de pan visuales (UX) -->
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0" style="font-size: 0.85rem; letter-spacing: 1px;">
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:inicio' %}" class="text-decoration-none text-cyber-blue hover-neon-green">>_ INICIO.exe</a></li>
+                    <li class="breadcrumb-item active fw-bold text-neon-green" aria-current="page" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">AUTENTICACION.exe</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        
+        <div class="col-md-8 col-lg-6">
+            <div class="card rounded-0 border h-100 tarjeta-cristal cyber-breathe-blue bg-dark-1">
+                <div class="card-header border-bottom-0 pt-4 pb-0 bg-transparent">
+                    <h3 class="mb-0 fw-bold text-cyber-blue letter-spacing-1">
+                        >_ AUTENTICACION.exe<span class="blink-cursor">_</span>
+                    </h3>
+                </div>
+
+                <div class="card-body p-4 p-md-5 pt-4">
+                    <p class="mb-4 text-neon-green">// Ingrese sus credenciales de red para acceder al mainframe de GatoPobre Teck.</p>
+
+                    <form method="post" action="" novalidate class="cyber-form">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="mb-4">
+                                <label class="form-label fw-bold" for="{{ field.id_for_label }}" style="color: #00f3ff; text-transform: uppercase;">
+                                    {{ field.label }}
+                                </label>
+                                
+                                {{ field }} 
+                                
+                                {% if field.errors %}
+                                    <div class="small mt-2 fw-bold p-2 border text-neon-red text-shadow-red" style="background-color: rgba(255, 0, 60, 0.1); border-color: #ff003c !important;">
+                                        >_ ACCESO DENEGADO: {{ field.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="d-grid mt-5 gap-3">
+                            <button class="btn rounded-0 fw-bold py-3 cyber-btn btn-cyber-login letter-spacing-2" type="submit" style="z-index: 15;">
+                                [ CONECTAR_NODO ]
+                            </button>
+                            
+                            <a href="{% url 'miapp:registro' %}" class="text-center text-decoration-none mt-3 fw-bold cyber-link text-neon-green">
+                                >_ No tengo credenciales. Solicitar acceso.
+                            </a>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Actualizar Identidad | GatoPobre{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 mb-5 scanlines-container" style="font-family: 'Courier New', Courier, monospace;">
+    <!-- Migas de pan visuales (UX) -->
+    <div class="row mb-3 justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0" style="font-size: 0.85rem; letter-spacing: 1px;">
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:inicio' %}" class="text-decoration-none text-cyber-blue hover-neon-green">>_ INICIO.exe</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:dashboard' %}" class="text-decoration-none text-cyber-blue hover-neon-green">TERMINAL_PERSONAL.sys</a></li>
+                    <li class="breadcrumb-item active fw-bold text-neon-green" aria-current="page" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">ACTUALIZAR_IDENTIDAD.exe</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="card rounded-0 border h-100 tarjeta-cristal bg-dark-1" style="border-color: #00f3ff !important; box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);">
+                <div class="card-header border-bottom-0 pt-4 pb-0 bg-transparent">
+                    <h3 class="mb-0 fw-bold text-cyber-blue letter-spacing-1">
+                        >_ ACTUALIZAR_IDENTIDAD.exe<span class="blink-cursor">_</span>
+                    </h3>
+                </div>
+
+                <div class="card-body p-4 p-md-5 pt-4">
+                    <p class="mb-4 text-neon-green">// Modifica tus parámetros de usuario. Los cambios se encriptarán inmediatamente en el mainframe.</p>
+
+                    <div class="text-center mb-5 p-3 border bg-dark-2" style="border-color: #1a4d4d !important;">
+                        <span class="d-block mb-3 fw-bold text-cyber-blue text-uppercase">>_ AVATAR_ACTUAL.png</span>
+                        {% if form.instance.imagen_avatar %}
+                            <img id="avatar-preview" src="{{ form.instance.imagen_avatar.url }}" alt="Tu Avatar" class="rounded-0 avatar-dashboard-lg">
+                        {% else %}
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-0 border avatar-dashboard-lg avatar-placeholder-lg-red">
+                                <i class="bi bi-person-x icon-dashboard-lg-red"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <form id="formulario-principal" method="post" action="" enctype="multipart/form-data" novalidate class="cyber-form">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="p-2 mb-4 border fw-bold" style="background-color: rgba(255, 0, 60, 0.1); border-color: #ff003c !important; color: #ff003c; text-shadow: 0 0 5px rgba(255,0,60,0.5);">
+                                {% for error in form.non_field_errors %}
+                                    >_ FALLO DE SISTEMA: {{ error }}<br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% for field in form %}
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-cyber-blue text-uppercase" for="{{ field.id_for_label }}">
+                                    // {{ field.label|upper }}
+                                </label>
+                                
+                                {% if field.field.widget.input_type == "password" %}
+                                    <div class="input-group">
+                                        {{ field }}
+                                        <button type="button" class="btn rounded-0 btn-ojo d-flex align-items-center justify-content-center bg-dark-2 border-neon-blue-light text-cyber-blue w-50px h-auto" aria-label="Mostrar contraseña">
+                                            <i class="bi bi-eye-slash" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+
+                                {% if field.errors %}
+                                    <div id="{{ field.id_for_label }}_error" class="small mt-2 fw-bold text-neon-red text-shadow-red p-2 border border-neon-red rounded-0 bg-dark-1" role="alert">
+                                        >_ ERROR: {{ field.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                                
+                                {% if field.help_text %}
+                                    <div id="{{ field.id_for_label }}_help" class="form-text mt-1 text-legible-muted small ps-2 pt-1">{{ field.help_text|safe }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="d-grid mt-5">
+                            <button class="btn rounded-0 fw-bold py-3 cyber-btn cyber-btn-outline-green letter-spacing-2 d-flex justify-content-center align-items-center" type="submit" id="btn-submit">
+                                [ SOBRESCRIBIR DATOS ]
+                                <span id="spinner-submit" class="spinner-border spinner-border-sm d-none ms-3" role="status" aria-hidden="true" style="color: #050505;"></span>
+                            </button>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

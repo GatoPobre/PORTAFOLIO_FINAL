@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5 scanlines-container text-center" style="font-family: 'Courier New', Courier, monospace;">
+    <!-- Migas de pan visuales (UX) -->
+    <div class="row mb-3 justify-content-center text-start">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0" style="font-size: 0.85rem; letter-spacing: 1px;">
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:inicio' %}" class="text-decoration-none text-cyber-blue hover-neon-green">>_ INICIO.exe</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'miapp:dashboard' %}" class="text-decoration-none text-cyber-blue hover-neon-green">TERMINAL_PERSONAL.sys</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'tienda:producto_list' %}" class="text-decoration-none text-cyber-blue hover-neon-green">GESTION_INVENTARIO.exe</a></li>
+                    <li class="breadcrumb-item active fw-bold text-neon-green" aria-current="page" style="text-shadow: 0 0 5px rgba(0,255,65,0.5);">ELIMINAR.bat</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card rounded-0 border p-4 p-md-5 tarjeta-cristal bg-dark-1 border-neon-red">
+                <div class="mb-4">
+                    <i class="bi bi-exclamation-triangle-fill fs-1 display-1 text-neon-red" style="text-shadow: 0 0 20px rgba(255,0,60,0.6);"></i>
+                </div>
+
+                <h1 class="display-5 fw-bold mb-4 text-uppercase text-neon-red">
+                    >_ ALERTA DE ELIMINACIÓN<span class="blink-cursor">_</span>
+                </h1>
+                
+                <p class="fs-4 text-light mb-4">
+                    ¿Estás seguro de que deseas eliminar permanentemente el producto <strong class="text-neon-blue">"{{ object.nombre }}"</strong>?
+                </p>
+                <p class="fs-5 text-secondary mb-5">
+                    Esta acción no se puede deshacer.<span class="blink-cursor">_</span> 
+                </p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                        <button type="submit" class="btn fw-bold py-3 px-5 cyber-btn" style="background-color: #ff003c; color: #fff; border-color: #ff003c;">
+                            [ SÍ, ELIMINAR ]
+                        </button>
+                        <a href="{% url 'tienda:producto_list' %}" class="btn fw-bold py-3 px-5 cyber-btn cyber-btn-outline-blue">
+                            [ NO, CANCELAR ]
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

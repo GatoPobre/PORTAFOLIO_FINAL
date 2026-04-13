@@ -1,0 +1,16 @@
+¡Hola, {{ pedido.nombre_cliente }}!
+
+Te informamos que el estado de tu pedido #{{ pedido.id }} en GatoPobreTECK ha sido actualizado.
+
+Nuevo Estado: {{ nuevo_estado }}
+
+{% if es_anulado %}
+Hemos procesado la anulación de tu pedido. El stock de los productos ha sido restaurado. Si tienes alguna consulta, no dudes en contactarnos.
+{% else %}
+Puedes ver los detalles completos de tu pedido iniciando sesión en nuestro sitio web y accediendo a tu terminal personal.
+{% endif %}
+
+Gracias por confiar en GatoPobreTECK.
+
+---
+© {% now "Y" %} GatoPobreTECK. Todos los derechos encriptados.
